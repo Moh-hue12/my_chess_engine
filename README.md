@@ -20,6 +20,3 @@ A chess engine built from scratch in C, with correctness and optimization as fir
 1. Optimize the search algorithm further — add a hash table and transposition tables...
 2. NNUE evaluation trained from self-play
 
-## Building
-
-[add your actual build instructions here]
