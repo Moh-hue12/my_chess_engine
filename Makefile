@@ -1,4 +1,3 @@
-# المترجم والأعلام
 CC = gcc
 CFLAGS = -O3 -march=native -mtune=native -flto \
          -fomit-frame-pointer -fno-stack-protector \
