@@ -1,6 +1,6 @@
-#include "serach.h"
+#include "search.h"
 #include "evaluation.h"
-#include "hundle_move.h"
+#include "handle_move.h"
 #define MAX_MOVES 256
 #define INF 1e9
 

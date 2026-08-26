@@ -2,10 +2,10 @@
 #include "attacks.h"
 #include "bitboard.h"
 #include "evaluation.h"
-#include "hundle_move.h"
+#include "handle_move.h"
 #include "magic.h"
 #include "movegen.h"
-#include "serach.h"
+#include "search.h"
 
 #define MAX_MOVES 256
 #define MAX_INPUT 1000000
