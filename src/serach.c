@@ -2,7 +2,9 @@
 #include "evaluation.h"
 #include "hundle_move.h"
 #define MAX_MOVES 256
-#define INF 1000000
+#define INF 1e9
+
+#define MATE_SCORE 100000
 
 #define EVALUATE_CURRENT(bb)                                                   \
   (((mg_score) * ((bb)->game_phase) +                                          \
@@ -74,30 +76,42 @@ int alpha_beta(bboard *bb, int depth, int alpha, int beta, bool is_root) {
   int color = (bb->turn == 1) ? WHITE : BLACK;
 
   generate_all_moves(bb, color, moves, &num);
+  if (num == 0) {
+    return -MATE_SCORE;
+  }
   move_ordering(bb, moves, num);
 
   for (int i = 0; i < num; i++) {
     UndoInfo u;
     make_move(bb, moves[i], &u);
 
-    int score = -alpha_beta(bb, depth - 1, -beta, -alpha, false);
-
-    undo_move(bb, &u);
-
-    if (score >= beta) {
-      return score; // beta cutoff
+    if (is_root && num > 0 && bb->best_move == -1) {
+      bb->best_move = moves[0];
     }
+
+    int score = -alpha_beta(bb, depth - 1, -beta, -alpha, false);
+    undo_move(bb, &u);
 
     if (score > alpha) {
       alpha = score;
-      if (is_root)
+      if (is_root) {
         bb->best_move = moves[i];
+      }
+    }
+
+    if (!is_root && score >= beta) {
+      return score; // beta cutoff
     }
   }
 
   return alpha;
 }
 
+//============================================================
+//  ######## Other implmention to the search algorithm
+//=============================================================
+//
+//
 // int negamax(bboard *bb, int depth) {
 //   if (depth == 0) {
 //     return bb->turn * EVALUATE_CURRENT(bb);

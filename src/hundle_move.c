@@ -18,42 +18,45 @@ static const int PhaseWeight[5] = {0, 1, 1, 2, 4};
 // , and the a piece flag to test for king moves and rooks)
 uint64_t *get_piece_bb(bboard *bb, int sq, int *color, int *piece) {
   uint64_t mask = 1ULL << sq;
+
   if (bb->white_pieces & mask) {
     if (color)
-      *color = WHITE;
+      *color = 0; // WHITE = 0
     if (bb->white_pawns & mask) {
       if (piece)
         *piece = 0;
       return &bb->white_pawns;
-    }
+    } // PAWN = 0
     if (bb->white_knights & mask) {
       if (piece)
         *piece = 1;
       return &bb->white_knights;
-    }
+    } // KNIGHT = 1
     if (bb->white_bishops & mask) {
       if (piece)
         *piece = 2;
       return &bb->white_bishops;
-    }
+    } // BISHOP = 2
     if (bb->white_rooks & mask) {
       if (piece)
         *piece = 3;
       return &bb->white_rooks;
-    }
+    } // ROOK = 3
     if (bb->white_queen & mask) {
       if (piece)
         *piece = 4;
       return &bb->white_queen;
-    }
+    } // QUEEN = 4
     if (bb->white_king & mask) {
       if (piece)
         *piece = 5;
       return &bb->white_king;
-    }
-  } else {
+    } // KING = 5
+  }
+
+  if (bb->black_pieces & mask) {
     if (color)
-      *color = BLACK;
+      *color = 1; // BLACK = 1
     if (bb->black_pawns & mask) {
       if (piece)
         *piece = 0;
@@ -85,9 +88,13 @@ uint64_t *get_piece_bb(bboard *bb, int sq, int *color, int *piece) {
       return &bb->black_king;
     }
   }
+
+  if (color)
+    *color = 0;
+  if (piece)
+    *piece = 0;
   return NULL;
 }
-
 static void clear_square(bboard *bb, int sq) {
   int color, piece;
   uint64_t *bb_piece = get_piece_bb(bb, sq, &color, &piece);

@@ -11,11 +11,22 @@ BIN_DIR = .
 
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 OBJECTS = $(SOURCES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
-TARGET = $(BIN_DIR)/my_engine
 
-all: $(TARGET)
+# Exclude perft.c (contains main) from engine build
+ENGINE_OBJS = $(filter-out $(BUILD_DIR)/perft.o, $(OBJECTS))
+# Exclude main.c (contains main) from perft build
+PERFT_OBJS = $(filter-out $(BUILD_DIR)/main.o, $(OBJECTS))
 
-$(TARGET): $(OBJECTS)
+TARGET_ENGINE = $(BIN_DIR)/my_engine
+TARGET_PERFT  = $(BIN_DIR)/perft
+
+all: $(TARGET_ENGINE) $(TARGET_PERFT)
+
+$(TARGET_ENGINE): $(ENGINE_OBJS)
+	@mkdir -p $(BIN_DIR)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+
+$(TARGET_PERFT): $(PERFT_OBJS)
 	@mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
@@ -24,14 +35,12 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET)
+	rm -rf $(BUILD_DIR) $(TARGET_ENGINE) $(TARGET_PERFT)
 
-distclean: clean
-	rm -f $(TARGET)
+run_engine: $(TARGET_ENGINE)
+	./$(TARGET_ENGINE)
 
-run: $(TARGET)
-	./$(TARGET)
+run_perft: $(TARGET_PERFT)
+	./$(TARGET_PERFT)
 
 rebuild: clean all
-
-
