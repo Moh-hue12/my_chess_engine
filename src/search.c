@@ -108,7 +108,7 @@ int alpha_beta(bboard *bb, int depth, int alpha, int beta, bool is_root) {
 }
 
 //============================================================
-//  ######## Other implmention to the search algorithm
+//  ######## Other implmention of the search algorithm
 //=============================================================
 //
 //
